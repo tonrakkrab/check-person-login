@@ -1,0 +1,25 @@
+
+    {% extends 'base.html' %}
+    {% block title %}Welcome{% endblock title %}
+    {% block content %}
+
+    <div class="container" style="align-items: center;">
+        <div class="msg">{{ msg }}</div>
+        <br/>
+        {% if session.username %}
+        <h3>Welcome {{ session.username }}!</h3>
+        {% else %}
+        <h3>Welcome to Check Person!</h3>
+        {% endif%}
+        <br/>
+        <h3>View Person Details</h3> 
+        <br>
+        <h4>{{person.identify}}</h4>
+        <p><strong>ID_card_photo_path: </strong> {{person.ID_card_photo_path}}. </p>
+        <p><strong>Firstname: </strong> {{person.firstname_th}}. </p> 
+        <p><strong>Lastname: </strong> {{person.lastname_th}}. </p> 
+        <p><strong>Telephone Number: </strong> {{person.telephone_number}}. </p> 
+        <p><strong>Trip Type: </strong> {{person.trip_type_id}}. </p>             
+    </div>
+
+    {% endblock content %}

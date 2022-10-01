@@ -1,0 +1,138 @@
+
+    {% extends 'base.html' %}
+    {% block title %}Welcome{% endblock title %}
+    {% block content %}
+
+    <div class="container" style="align-items: center;">
+        <div class="msg">{{ msg }}</div>
+        <br/>
+        {% if session.username %}
+        <h3>Welcome {{ session.username }}!</h3>
+        {% else %}
+        <h3>Welcome to Check Person!</h3>
+        {% endif%}
+        <br/>
+        <h3>Add Person Data</h3> 
+        <br>
+        <form action="{{ url_for('person_add') }}" method="post">
+            {% if msg is defined and msg %}
+                <div class="alert alert-warning">{{ msg }}</div>
+            {% endif %}
+
+            <!-- 
+            identify varchar(50),
+            ID_card_photo_path VARCHAR(500) NULL,
+            firstname_th VARCHAR(100),
+            lastname_th VARCHAR(100) NULL,
+            telephone_number VARCHAR(20) NULL,
+            
+            trip_type_id INT,
+            -->            
+            <label>Identify / Passport :</label>
+            <div class="form-group">
+                <div id="divIdentify">
+                    <label for="identify" style="font-size: 8pt;">Identify:</label>
+                    <input type="radio" name="identifyOrPassport" id="identifyOrPassport1" style="margin-bottom: 15px;" onchange="SelectIdentifyOrPassport();" />
+                    <input type="text" class="form-control" id="identify" name="identify" pattern="^([0-9]){13}$" maxlength="13" placeholder="Enter identify">
+                    <input type="button"class="form-control" value="Check Identify" onclick="return CheckIdentify();" />
+                    <script type="text/javascript">
+                        function CheckIdentify() {
+                            var patt = new RegExp("^([0-9]){13}$")
+                            var advalue = document.getElementById("identify").value;
+                            if (patt.test(advalue)) {
+                                alert("Identify is valid");
+                                return true;
+                            }
+                            else {
+                                alert("Identify is not valid");
+                            }
+                            return false;
+                        }
+                    </script>
+                </div>
+                <script type="text/javascript">
+                    function SelectIdentifyOrPassport() {
+                        //alert("fn SelectIdentifyOrPassport");                        
+                        if (patt.test(advalue)) {
+                            alert("Identify is valid");
+                            return true;
+                        }
+                        else {
+                            alert("Identify is not valid");
+                        }
+                        return false;
+                    }
+                </script>
+                <div id="divPassport">
+                    <label for="passport" style="font-size: 8pt;">Passport:</label>
+                    <input type="radio" name="identifyOrPassport" id="identifyOrPassport2" style="margin-bottom: 15px;" onchange="SelectIdentifyOrPassport();" />
+                    <input type="text" class="form-control" id="passport" name="passport" pattern="^([A-Z a-z]){2}([0-9]){7}$" maxlength="9"  placeholder="Enter passport" />
+                    <input type="button" class="form-control" value="Check Passport" onclick="return CheckPassport();" />
+                    <script type="text/javascript">
+                        function CheckPassport() {
+                            var patt = new RegExp("^([A-Z a-z]){2}([0-9]){7}$")
+                            var advalue = document.getElementById("passport").value;
+                            if (patt.test(advalue)) {
+                                alert("Passport is valid");
+                                return true;
+                            }
+                            else {
+                                alert("Passport is not valid");
+                            }
+                            return false;
+                        }
+                    </script>
+                </div>
+            </div>
+            <br/>
+            <div class="form-group">
+                <label for="ID_card_photo_path">ID Card photo:</label>
+                <input type="text" class="form-control" id="ID_card_photo_path" name="ID_card_photo_path" placeholder="Enter ID Card photo path">
+            </div>
+            <div class="form-group">
+                <label for="firstname_th">Firstname:</label>
+                <input type="text" class="form-control" id="firstname_th" name="firstname_th" placeholder="Enter firstname">
+            </div>
+            <div class="form-group">
+                <label for="lastname_th">Lastname:</label>
+                <input type="text" class="form-control" id="lastname_th" name="lastname_th" placeholder="Enter lastname">
+            </div>            
+            <div class="form-group">
+                <label for="telephone_number">Telephone Number:</label>
+                <input type="tel" class="form-control" id="telephone_number" name="telephone_number" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="Enter telephone number">
+            </div>
+            
+            <div class="form-group">
+                <label for="trip_type">Trip Type:</label>
+                <select class="form-control" id="trip_type" name="trip_type">
+                    <option value="1">รถไฟ</option>
+                    <option value="2">เครื่องบิน</option>
+                    <option value="3">รถยนต์ส่วนบุคคล</option>
+                    <option value="4">ทางเรือ</option>	                   
+                </select>
+            </div>
+
+            <!--
+            origin_tambon_id INT NULL,
+            origin_amphur_id INT NULL,
+            origin_province_id INT NULL,
+            origin_country_id INT NULL,
+            origin_date datetime NULL,
+            
+            destination_tambon_id INT NULL,
+            destination_amphur_id INT NULL,
+            destination_province_id INT NULL,
+            destination_country_id INT NULL,
+            destination_date datetime NULL, 
+            -->
+
+            <!-- <div class="form-group">
+                <label for="country">Country:</label>
+                <input type="text" class="form-control" id="country" name="country">
+            </div> -->
+
+            <button type="submit" class="btn btn-primary">Add</button>		
+        </form>
+    </div>
+
+    {% endblock content %}

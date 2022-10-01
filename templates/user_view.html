@@ -1,0 +1,21 @@
+
+    {% extends 'base.html' %}
+    {% block title %}Welcome{% endblock title %}
+    {% block content %}
+
+    <div class="container" style="align-items: center;">
+        <div class="msg">{{ msg }}</div>
+        <br/>
+        {% if session.username %}
+        <h3>Welcome {{ session.username }}!</h3>
+        {% else %}
+        <h3>Welcome to Check Person!</h3>
+        {% endif%}
+        <br/>
+        <h3>User Details</h3> 
+        <br>
+        <h4>{{user.username}}</h4>
+        <p><strong>Email: </strong> {{user.email}}. </p>        
+    </div>
+
+    {% endblock content %}

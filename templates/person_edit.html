@@ -1,0 +1,68 @@
+
+    {% extends 'base.html' %}
+    {% block title %}Welcome{% endblock title %}
+    {% block content %}
+
+    <div class="container" style="align-items: center;">
+        <div class="msg">{{ msg }}</div>
+        <br/>
+        {% if session.username %}
+        <h3>Welcome {{ session.username }}!</h3>
+        {% else %}
+        <h3>Welcome to Check Person!</h3>
+        {% endif%}
+        <br/>
+        <h3>Edit Person Details</h3> 
+        <br>
+        <form action="{{ url_for('person_edit') }}" method="post">
+            {% if msg is defined and msg %}
+                <div class="alert alert-warning">{{ msg }}</div>
+            {% endif %}
+
+            <label>Identify / Passport :</label>
+            <div class="form-group">
+                <div id="divIdentify">
+                    <label for="identify" style="font-size: 8pt;">Identify:</label>
+                    <input type="radio" name="identifyOrPassport" id="identifyOrPassport1" style="margin-bottom: 15px;" onchange="SelectIdentifyOrPassport();" />
+                    <input type="text" class="form-control" id="identify" name="identify" pattern="^([0-9]){13}$" maxlength="13" placeholder="Enter identify" value="{{ editPerson.identify }}" >
+                </div>
+                <div id="divPassport">
+                    <label for="passport" style="font-size: 8pt;">Passport:</label>
+                    <input type="radio" name="identifyOrPassport" id="identifyOrPassport2" style="margin-bottom: 15px;" onchange="SelectIdentifyOrPassport();" />
+                    <input type="text" class="form-control" id="passport" name="passport" pattern="^([A-Z a-z]){2}([0-9]){7}$" maxlength="9"  placeholder="Enter passport" value="{{ editPerson.identify }}" />                    
+                </div>
+            </div>
+            <br/>
+            <div class="form-group">
+                <label for="ID_card_photo_path">ID Card photo:</label>
+                <input type="text" class="form-control" id="ID_card_photo_path" name="ID_card_photo_path" placeholder="Enter ID Card photo path" value="{{ editPerson.ID_card_photo_path }}" >
+            </div>
+            <div class="form-group">
+                <label for="firstname_th">Firstname:</label>
+                <input type="text" class="form-control" id="firstname_th" name="firstname_th" placeholder="Enter firstname" value="{{ editPerson.firstname_th }}" >
+            </div>
+            <div class="form-group">
+                <label for="lastname_th">Lastname:</label>
+                <input type="text" class="form-control" id="lastname_th" name="lastname_th" placeholder="Enter lastname" value="{{ editPerson.lastname_th }}" >
+            </div>            
+            <div class="form-group">
+                <label for="telephone_number">Telephone Number:</label>
+                <input type="tel" class="form-control" id="telephone_number" name="telephone_number" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="Enter telephone number" value="{{ editPerson.telephone_number }}">
+            </div>
+            
+            <div class="form-group">
+                <label for="trip_type">Trip Type:</label>
+                <select class="form-control" id="trip_type" name="trip_type">
+                    <option value="1">รถไฟ</option>
+                    <option value="2">เครื่องบิน</option>
+                    <option value="3">รถยนต์ส่วนบุคคล</option>
+                    <option value="4">ทางเรือ</option>	                   
+                </select>
+            </div>
+                
+            <input type="hidden" id="person_id" name="person_id" value="{{ editPerson.person_id }}">
+            <button type="submit" class="btn btn-primary">Save</button>		
+        </form>	
+    </div>
+
+    {% endblock content %}
