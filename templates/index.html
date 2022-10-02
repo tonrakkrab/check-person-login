@@ -3,10 +3,18 @@
     {% block title %}Welcome{% endblock title %}
     {% block content %}
 
-    {% if session.username %}
+    <!-- {% if session.username %}
     <h3>Welcome {{ session.username }}!</h3>
     {% else %}
     <h3>Welcome to Check Person!</h3>
+    {% endif%} -->
+
+    {% if session.username %}
+    <h3>ยินดีต้อนรับ {{ session.username }}!</h3>
+    {% else %}
+    <h3>ยินดีต้อนรับ สู่ ระบบตรวจสอบบุคคลเดินทางเข้าจังหวัดสงขลา</h3>
     {% endif%}
+
+    <a href="{{url_for('person')}}" class="btn btn-danger">จัดการข้อมูลบุคคล</a>
 
     {% endblock content %}

@@ -5,64 +5,102 @@
 
     <div class="container" style="align-items: center;">
         <div class="msg">{{ msg }}</div>
-        <br/>
+        <!-- <br/>
         {% if session.username %}
         <h3>Welcome {{ session.username }}!</h3>
         {% else %}
         <h3>Welcome to Check Person!</h3>
         {% endif%}
-        <br/>
-        <h3>Edit Person Details</h3> 
+        <br/> -->
+        <h3>แก้ไขข้อมูลบุคคลเดินทางเข้าจังหวัดสงขลา</h3>
+        <h4>(Edit Data of persons traveling to Songkhla Province)</h4>
         <br>
         <form action="{{ url_for('person_edit') }}" method="post">
             {% if msg is defined and msg %}
                 <div class="alert alert-warning">{{ msg }}</div>
             {% endif %}
 
-            <label>Identify / Passport :</label>
+            <!-- 
+            identify varchar(50),
+            ID_card_photo_path VARCHAR(500) NULL,
+            firstname_th VARCHAR(100),
+            lastname_th VARCHAR(100) NULL,
+            telephone_number VARCHAR(20) NULL,
+            
+            trip_type_id INT,
+           
+            origin_tambon_id INT NULL,
+            origin_amphur_id INT NULL,
+            origin_province_id INT NULL,
+            origin_country_id INT NULL,
+            origin_date datetime NULL,
+            
+            destination_tambon_id INT NULL,
+            destination_amphur_id INT NULL,
+            destination_province_id INT NULL,
+            destination_country_id INT NULL,
+            destination_date datetime NULL, 
+            -->
+
+            <div id="divIdentifyOrPassport" class="form-group">
+                <label for="identify">Identify / Passport :</label>                   
+                <input type="text" class="form-control" id="identify" name="identify" pattern="^([0-9]){13}$|^([A-Z a-z]){2}([0-9]){7}$" maxlength="13" value="{{ editPerson.identify }}" placeholder="Enter identify">
+                <input type="button"class="form-control" value="ตรวจ Identify / Passport" onclick="return CheckIdentifyPassport();" style="margin-bottom: 10px;"/>
+                <script type="text/javascript">
+                    function CheckIdentifyPassport() {
+                        var patt = new RegExp("^([0-9]){13}$|^([A-Z a-z]){2}([0-9]){7}$")
+                        var advalue = document.getElementById("identify").value;
+                        if (patt.test(advalue)) {
+                            alert("Identify / Passport มีรูปแบบถูกต้อง");
+                            return true;
+                        }
+                        else {
+                            alert("Identify / Passport รูปแบบไม่ถูกต้อง");
+                        }
+                        return false;
+                    }
+                </script>
+            </div>            
             <div class="form-group">
-                <div id="divIdentify">
-                    <label for="identify" style="font-size: 8pt;">Identify:</label>
-                    <input type="radio" name="identifyOrPassport" id="identifyOrPassport1" style="margin-bottom: 15px;" onchange="SelectIdentifyOrPassport();" />
-                    <input type="text" class="form-control" id="identify" name="identify" pattern="^([0-9]){13}$" maxlength="13" placeholder="Enter identify" value="{{ editPerson.identify }}" >
-                </div>
-                <div id="divPassport">
-                    <label for="passport" style="font-size: 8pt;">Passport:</label>
-                    <input type="radio" name="identifyOrPassport" id="identifyOrPassport2" style="margin-bottom: 15px;" onchange="SelectIdentifyOrPassport();" />
-                    <input type="text" class="form-control" id="passport" name="passport" pattern="^([A-Z a-z]){2}([0-9]){7}$" maxlength="9"  placeholder="Enter passport" value="{{ editPerson.identify }}" />                    
-                </div>
-            </div>
-            <br/>
-            <div class="form-group">
-                <label for="ID_card_photo_path">ID Card photo:</label>
+                <label for="ID_card_photo_path">ถ่ายภาพบัตรประชานชน:</label>
                 <input type="text" class="form-control" id="ID_card_photo_path" name="ID_card_photo_path" placeholder="Enter ID Card photo path" value="{{ editPerson.ID_card_photo_path }}" >
             </div>
             <div class="form-group">
-                <label for="firstname_th">Firstname:</label>
+                <label for="firstname_th">ชื่อ:</label>
                 <input type="text" class="form-control" id="firstname_th" name="firstname_th" placeholder="Enter firstname" value="{{ editPerson.firstname_th }}" >
             </div>
             <div class="form-group">
-                <label for="lastname_th">Lastname:</label>
+                <label for="lastname_th">สกุล:</label>
                 <input type="text" class="form-control" id="lastname_th" name="lastname_th" placeholder="Enter lastname" value="{{ editPerson.lastname_th }}" >
             </div>            
             <div class="form-group">
-                <label for="telephone_number">Telephone Number:</label>
+                <label for="telephone_number">เบอร์โทรศัพท์:</label>
                 <input type="tel" class="form-control" id="telephone_number" name="telephone_number" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="Enter telephone number" value="{{ editPerson.telephone_number }}">
             </div>
             
             <div class="form-group">
-                <label for="trip_type">Trip Type:</label>
-                <select class="form-control" id="trip_type" name="trip_type">
+                <label for="trip_type">รูปแบบการเดินทาง:</label>
+                <!-- <select class="form-control" id="trip_type" name="trip_type">
                     <option value="1">รถไฟ</option>
                     <option value="2">เครื่องบิน</option>
                     <option value="3">รถยนต์ส่วนบุคคล</option>
-                    <option value="4">ทางเรือ</option>	                   
+                    <option value="4">ทางเรือ</option>
+                </select> -->
+                <select name="trip_type">
+                    {% for c in tripTypesList %}
+                        <option value='{{c.trip_type_id}}' {% if editPerson.trip_type_id == c.trip_type_id %}selected="selected"{% endif %}>{{c.trip_type_name}}</option>
+                    {% endfor %}
                 </select>
             </div>
-                
+            
+            <br/>
             <input type="hidden" id="person_id" name="person_id" value="{{ editPerson.person_id }}">
-            <button type="submit" class="btn btn-primary">Save</button>		
-        </form>	
+            <button type="submit" class="btn btn-primary">บันทึกข้อมูล (Save Data)</button>		
+        </form>
+
+        <br/>
+        <br/>
+        <a href="{{url_for('person')}}" class="btn btn-danger">ย้อนกลับ (ฺBack)</a>
     </div>
 
     {% endblock content %}

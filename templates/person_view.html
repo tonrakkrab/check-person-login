@@ -5,21 +5,64 @@
 
     <div class="container" style="align-items: center;">
         <div class="msg">{{ msg }}</div>
-        <br/>
+        <!-- <br/>
         {% if session.username %}
         <h3>Welcome {{ session.username }}!</h3>
         {% else %}
         <h3>Welcome to Check Person!</h3>
         {% endif%}
-        <br/>
-        <h3>View Person Details</h3> 
+        <br/> -->
+        <h3>แสดงข้อมูลบุคคลเดินทางเข้าจังหวัดสงขลา</h3>
+        <h4>(View Data of persons traveling to Songkhla Province)</h4>
         <br>
-        <h4>{{person.identify}}</h4>
-        <p><strong>ID_card_photo_path: </strong> {{person.ID_card_photo_path}}. </p>
-        <p><strong>Firstname: </strong> {{person.firstname_th}}. </p> 
-        <p><strong>Lastname: </strong> {{person.lastname_th}}. </p> 
-        <p><strong>Telephone Number: </strong> {{person.telephone_number}}. </p> 
-        <p><strong>Trip Type: </strong> {{person.trip_type_id}}. </p>             
+        <h5>Citizen ID/Passport: {{person.identify}}</h5>
+        
+        <p><strong>ถ่ายภาพบัตรประชานชน: </strong> {{person.ID_card_photo_path}}</p>
+        <p><strong>ชื่อ: </strong> {{person.firstname_th}}</p> 
+        <p><strong>สกุล: </strong> {{person.lastname_th}}</p> 
+        <p><strong>เบอร์โทรศัพท์: </strong> {{person.telephone_number}}</p>
+        <br/>
+        <p><strong>รูปแบบการเดินทาง: </strong> {{person.trip_type_name}}</p>
+        <br/>
+        <p><strong>ตำบลต้นทาง: </strong> {{person.origin_tambon_id }}</p>
+        <p><strong>อำเภอต้นทาง: </strong> {{person.origin_amphur_id }}</p>
+        <p><strong>จังหวัดต้นทาง: </strong> {{person.origin_province_id }}</p>
+        <p><strong>ประเทศต้นทาง: </strong> {{person.origin_country_id }}</p>
+        <p><strong>วันที่เดินทาง จากต้นทาง: </strong> {{person.origin_date }}</p>
+        <br/>
+        <p><strong>ตำบลปลายทาง: </strong> {{person.destination_tambon_id }}</p>
+        <p><strong>อำเภอปลายทาง: </strong> {{person.destination_amphur_id }}</p>
+        <p><strong>จังหวัดปลายทาง: </strong> {{person.destination_province_id }}</p>
+        <p><strong>ประเทศปลายทาง: </strong> {{person.destination_country_id }}</p>
+        <p><strong>วันที่เดินทาง ถึงปลายทาง: </strong> {{person.destination_date }}</p>
+
+        <br/>
+        <br/>
+        <br/>
+        <a href="{{url_for('person')}}" class="btn btn-danger">ย้อนกลับ (ฺBack)</a>
+        
+        <!-- 
+        identify varchar(50),
+        ID_card_photo_path VARCHAR(500) NULL,
+        firstname_th VARCHAR(100),
+        lastname_th VARCHAR(100) NULL,
+        telephone_number VARCHAR(20) NULL,
+        
+        trip_type_id INT,
+    
+        origin_tambon_id INT NULL,
+        origin_amphur_id INT NULL,
+        origin_province_id INT NULL,
+        origin_country_id INT NULL,
+        origin_date datetime NULL,
+        
+        destination_tambon_id INT NULL,
+        destination_amphur_id INT NULL,
+        destination_province_id INT NULL,
+        destination_country_id INT NULL,
+        destination_date datetime NULL, 
+        -->
+
     </div>
 
     {% endblock content %}

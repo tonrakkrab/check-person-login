@@ -5,45 +5,70 @@
 
     <div class="container" style="align-items: center;">
         <div class="msg">{{ msg }}</div>
-        <br/>
+        <!-- <br/>
         {% if session.username %}
         <h3>Welcome {{ session.username }}!</h3>
         {% else %}
         <h3>Welcome to Check Person!</h3>
         {% endif%}
+        <br/> -->
+        <h3>ข้อมูลบุคคลเดินทางเข้าจังหวัดสงขลา</h3>
+        <h4>(Data of persons traveling to Songkhla Province)</h4>
+        <br>
+        <a href="{{url_for('person_add')}}" class="btn btn-success">เพิ่มข้อมูล (Add Data)</a>
         <br/>
-        <h2>Person Data</h2>
-        <a href="{{url_for('person_add')}}" class="btn btn-success">Add</a>
-        <table class="table table-striped">
-            <thead>
-              <tr>
-                <th>Identify</th>
-                <th>ID_card_photo_path</th>
-                <th>Firstname</th>
-                <th>Lastname</th>
-                <th>Telephone Number</th>
-                <th>Trip_Type</th>
-                <th></th>
-                <th></th>
-                <!-- <th></th>  -->                
-              </tr>
-            </thead>
-            <tbody>
-              {% for person in persons %}
-              <tr>
-                <td>{{person.identify}}</td>
-                <td>{{person.ID_card_photo_path}}</td>
-                <td>{{person.firstname_th}}</td>
-                <td>{{person.lastname_th}}</td>
-                <td>{{person.telephone_number}}</td>
-                <td>{{person.trip_type_id}}</td>
-                <td><a href="{{url_for('person_view', personid=person.person_id)}}" class="btn btn-primary">View</a></td>
-                <td><a href="{{url_for('person_edit', personid=person.person_id)}}" class="btn btn-warning">Edit</a></td>                
-                <!-- <td><a href="{{url_for('person_delete', personid=person.person_id)}}" class="btn btn-danger">Delete</a></td> -->
-              </tr> 
-            {% endfor %}	  
-            </tbody>
-        </table>	
+        <br/>
+
+        <!-- (A) SEARCH FORM -->
+        <form  action="{{ url_for('person_search') }}" method="post">
+          <div style="display: inline-block;">
+            <label for="search1">ชื่อ (Firstname):</label>
+            <!-- <input type="text" name="search1" required/> -->
+            <input type="text" name="search1"/>
+            <label for="search2">สกุล (Lastname):</label>
+            <!-- <input type="text" name="search2" required/> -->
+            <input type="text" name="search2"/>
+            <br/>            
+            <input type="submit" value="ค้นหาข้อมูล (Search Data)" style="margin-bottom: 10px;"/>
+          </div>
+        </form>
+ 
+        <!-- (B) OUTPUT SEARCH RESULTS -->
+        {% if persons | length != 0 %}
+          <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Citizen ID/Passport </th>
+                  <!-- <th>ถ่ายภาพบัตรประชานชน</th> -->
+                  <th>ชื่อ</th>
+                  <th>สกุล</th>
+                  <th>เบอร์โทรศัพท์</th>
+                  <th>รูปแบบการเดินทาง</th>
+                  <th></th>
+                  <th></th>
+                  <!-- <th></th>  -->                
+                </tr>
+              </thead>
+              <tbody>
+                {% for person in persons %}
+                <tr>
+                  <td>{{person.identify}}</td>
+                  <!-- <td>{{person.ID_card_photo_path}}</td> -->
+                  <td>{{person.firstname_th}}</td>
+                  <td>{{person.lastname_th}}</td>
+                  <td>{{person.telephone_number}}</td>
+                  <td>{{person.trip_type_name}}</td>
+                  <td><a href="{{url_for('person_view', personid=person.person_id)}}" class="btn btn-primary">แสดง</a></td>
+                  <td><a href="{{url_for('person_edit', personid=person.person_id)}}" class="btn btn-warning">แก้ไข</a></td>                
+                  <!-- <td><a href="{{url_for('person_delete', personid=person.person_id)}}" class="btn btn-danger">Delete</a></td> -->
+                </tr> 
+              {% endfor %}	  
+              </tbody>
+          </table>
+        {% else %}
+          <!-- <div>No search results.</div> -->
+          <div>ไม่มีผลลัพธ์จากการค้นหาข้อมูล.</div>
+        {% endif %}
     </div>
 
     {% endblock content %}

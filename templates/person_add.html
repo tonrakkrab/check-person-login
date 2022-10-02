@@ -5,14 +5,15 @@
 
     <div class="container" style="align-items: center;">
         <div class="msg">{{ msg }}</div>
-        <br/>
+        <!-- <br/>
         {% if session.username %}
         <h3>Welcome {{ session.username }}!</h3>
         {% else %}
         <h3>Welcome to Check Person!</h3>
         {% endif%}
-        <br/>
-        <h3>Add Person Data</h3> 
+        <br/> -->
+        <h3>เพิ่มข้อมูลบุคคลเดินทางเข้าจังหวัดสงขลา</h3>
+        <h4>(Add Data of persons traveling to Songkhla Province)</h4> 
         <br>
         <form action="{{ url_for('person_add') }}" method="post">
             {% if msg is defined and msg %}
@@ -28,87 +29,96 @@
             
             trip_type_id INT,
             -->            
-            <label>Identify / Passport :</label>
-            <div class="form-group">
-                <div id="divIdentify">
-                    <label for="identify" style="font-size: 8pt;">Identify:</label>
-                    <input type="radio" name="identifyOrPassport" id="identifyOrPassport1" style="margin-bottom: 15px;" onchange="SelectIdentifyOrPassport();" />
-                    <input type="text" class="form-control" id="identify" name="identify" pattern="^([0-9]){13}$" maxlength="13" placeholder="Enter identify">
-                    <input type="button"class="form-control" value="Check Identify" onclick="return CheckIdentify();" />
-                    <script type="text/javascript">
-                        function CheckIdentify() {
-                            var patt = new RegExp("^([0-9]){13}$")
-                            var advalue = document.getElementById("identify").value;
-                            if (patt.test(advalue)) {
-                                alert("Identify is valid");
-                                return true;
-                            }
-                            else {
-                                alert("Identify is not valid");
-                            }
-                            return false;
-                        }
-                    </script>
-                </div>
+            
+            <div id="divIdentifyOrPassport" class="form-group">
+                <label for="identify">Identify / Passport :</label>                    
+                <input type="text" class="form-control" id="identify" name="identify" pattern="^([0-9]){13}$|^([A-Z a-z]){2}([0-9]){7}$" maxlength="13" placeholder="Enter identify">
+                <input type="button"class="form-control" value="ตรวจ Identify / Passport" onclick="return CheckIdentifyPassport();" style="margin-bottom: 10px;"/>
                 <script type="text/javascript">
-                    function SelectIdentifyOrPassport() {
-                        //alert("fn SelectIdentifyOrPassport");                        
+                    function CheckIdentifyPassport() {
+                        var patt = new RegExp("^([0-9]){13}$|^([A-Z a-z]){2}([0-9]){7}$")
+                        var advalue = document.getElementById("identify").value;
                         if (patt.test(advalue)) {
-                            alert("Identify is valid");
+                            alert("Identify / Passport มีรูปแบบถูกต้อง");
                             return true;
                         }
                         else {
-                            alert("Identify is not valid");
+                            alert("Identify / Passport รูปแบบไม่ถูกต้อง");
                         }
                         return false;
                     }
                 </script>
-                <div id="divPassport">
-                    <label for="passport" style="font-size: 8pt;">Passport:</label>
-                    <input type="radio" name="identifyOrPassport" id="identifyOrPassport2" style="margin-bottom: 15px;" onchange="SelectIdentifyOrPassport();" />
-                    <input type="text" class="form-control" id="passport" name="passport" pattern="^([A-Z a-z]){2}([0-9]){7}$" maxlength="9"  placeholder="Enter passport" />
-                    <input type="button" class="form-control" value="Check Passport" onclick="return CheckPassport();" />
-                    <script type="text/javascript">
-                        function CheckPassport() {
-                            var patt = new RegExp("^([A-Z a-z]){2}([0-9]){7}$")
-                            var advalue = document.getElementById("passport").value;
-                            if (patt.test(advalue)) {
-                                alert("Passport is valid");
-                                return true;
-                            }
-                            else {
-                                alert("Passport is not valid");
-                            }
-                            return false;
-                        }
-                    </script>
-                </div>
             </div>
-            <br/>
             <div class="form-group">
-                <label for="ID_card_photo_path">ID Card photo:</label>
+                <label for="ID_card_photo_path">ถ่ายภาพบัตรประชานชน:</label>
                 <input type="text" class="form-control" id="ID_card_photo_path" name="ID_card_photo_path" placeholder="Enter ID Card photo path">
             </div>
             <div class="form-group">
-                <label for="firstname_th">Firstname:</label>
+                <label for="firstname_th">ชื่อ:</label>
                 <input type="text" class="form-control" id="firstname_th" name="firstname_th" placeholder="Enter firstname">
             </div>
             <div class="form-group">
-                <label for="lastname_th">Lastname:</label>
+                <label for="lastname_th">สกุล:</label>
                 <input type="text" class="form-control" id="lastname_th" name="lastname_th" placeholder="Enter lastname">
             </div>            
             <div class="form-group">
-                <label for="telephone_number">Telephone Number:</label>
+                <label for="telephone_number">เบอร์โทรศัพท์:</label>
                 <input type="tel" class="form-control" id="telephone_number" name="telephone_number" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="Enter telephone number">
             </div>
             
             <div class="form-group">
-                <label for="trip_type">Trip Type:</label>
-                <select class="form-control" id="trip_type" name="trip_type">
+                <label for="trip_type">รูปแบบการเดินทาง:</label>
+                <!-- <select class="form-control" id="trip_type" name="trip_type">
                     <option value="1">รถไฟ</option>
                     <option value="2">เครื่องบิน</option>
                     <option value="3">รถยนต์ส่วนบุคคล</option>
-                    <option value="4">ทางเรือ</option>	                   
+                    <option value="4">ทางเรือ</option>
+                </select> -->
+                <select name="trip_type">
+                    {% for c in tripTypesList %}
+                        <option value='{{c.trip_type_id}}'>{{c.trip_type_name}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="origin_date">วันที่เดินทาง จากต้นทาง:</label>
+                <input type="date" class="form-control" id="origin_date" name="origin_date" placeholder="Enter origin date">
+            </div>
+
+            <div class="form-group">
+                <label for="origin_country">ประเทศต้นทาง:</label>
+                <select name="origin_country">
+                    <!-- {% for c in countriesList %}
+                        <option value='{{c.country_id}}'>{{c.country_name}}</option>
+                    {% endfor %} -->
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="origin_province">จังหวัดต้นทาง:</label>
+                <select name="origin_province">
+                    {% for c in provincesList %}
+                        <option value='{{c.id}}'>{{c.name_th}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="origin_amphur">อำเภอต้นทาง:</label>
+                <select name="origin_amphur">
+                    {% for c in amphuresList %}
+                        <option value='{{c.id}}'>{{c.name_th}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="origin_tambon">ตำบลต้นทาง:</label>
+                <select name="origin_tambon">
+                    {% for c in districtsList %}
+                        <option value='{{c.id}}'>{{c.name_th}}</option>
+                    {% endfor %}
                 </select>
             </div>
 
@@ -126,13 +136,54 @@
             destination_date datetime NULL, 
             -->
 
-            <!-- <div class="form-group">
-                <label for="country">Country:</label>
-                <input type="text" class="form-control" id="country" name="country">
-            </div> -->
+            <div class="form-group">
+                <label for="destination_country">ประเทศปลายทาง:</label>
+                <select name="destination_country">
+                    <!-- {% for c in countriesList %}
+                        <option value='{{c._country_id}}'>{{c.country_name}}</option>
+                    {% endfor %} -->
+                </select>
+            </div>
 
-            <button type="submit" class="btn btn-primary">Add</button>		
+            <div class="form-group">
+                <label for="destination_province">จังหวัดปลายทาง:</label>
+                <select name="destination_province">
+                    {% for c in provincesList %}
+                        <option value='{{c.id}}'>{{c.name_th}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="destination_amphur">อำเภอปลายทาง:</label>
+                <select name="destination_amphur">
+                    {% for c in amphuresList %}
+                        <option value='{{c.id}}'>{{c.name_th}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="destination_tambon">ตำบลปลายทาง:</label>
+                <select name="destination_tambon">
+                    {% for c in districtsList %}
+                        <option value='{{c.id}}'>{{c.name_th}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="destination_date">วันที่เดินทาง ถึงปลายทาง:</label>
+                <input type="date" class="form-control" id="destination_date" name="destination_date" placeholder="Enter destination date">
+            </div>
+
+            <br/>
+            <button type="submit" class="btn btn-primary">บันทึกข้อมูล (Save Data)</button>            
         </form>
+
+        <br/>
+        <br/>
+        <a href="{{url_for('person')}}" class="btn btn-danger">ยกเลิก (Cancel)</a>
     </div>
 
     {% endblock content %}

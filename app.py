@@ -115,7 +115,9 @@ def user_delete():
 def person():
     if 'loggedin' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM persons')
+        # cursor.execute('SELECT * FROM persons')
+        sql = 'SELECT persons.*, trip_types.trip_type_name as trip_type_name FROM persons INNER JOIN trip_types ON trip_types.trip_type_id = persons.trip_type_id'
+        cursor.execute(sql)        
         persons = cursor.fetchall()
         return render_template("person.html", persons = persons)        
     return redirect(url_for('login'))
@@ -125,10 +127,12 @@ def person_view():
     if 'loggedin' in session:
         viewPersonId = request.args.get('personid')   
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM persons WHERE person_id = %s', (viewPersonId, ))
+        #cursor.execute('SELECT * FROM persons WHERE person_id = %s', (viewPersonId, ))
+        cursor.execute('SELECT persons.*, trip_types.trip_type_name as trip_type_name FROM persons INNER JOIN trip_types ON trip_types.trip_type_id = persons.trip_type_id WHERE person_id = %s', (viewPersonId, ))
         person = cursor.fetchone()   
         return render_template("person_view.html", person = person)
     return redirect(url_for('login'))
+
 
 @app.route("/person_edit", methods =['GET', 'POST'])
 def person_edit():
@@ -136,7 +140,8 @@ def person_edit():
     if 'loggedin' in session:
         editPersonId = request.args.get('personid')
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM persons WHERE person_id = %s', (editPersonId, ))
+        #cursor.execute('SELECT * FROM persons WHERE person_id = %s', (editPersonId, ))
+        cursor.execute('SELECT persons.*, trip_types.trip_type_name as trip_type_name FROM persons INNER JOIN trip_types ON trip_types.trip_type_id = persons.trip_type_id WHERE person_id = %s', (editPersonId, ))
         editPerson = cursor.fetchone()
         # if request.method == 'POST' and 'username' in request.form and 'user_id' in request.form and 'role' in request.form and 'country' in request.form :
         if request.method == 'POST' and 'firstname_th' in request.form and 'person_id' in request.form :
@@ -152,22 +157,28 @@ def person_edit():
                 msg = 'User updated !'
                 return redirect(url_for('user'))
         elif request.method == 'POST':
-            msg = 'Please fill out the form !'        
-        return render_template("person_edit.html", msg = msg, editPerson = editPerson)
+            msg = 'Please fill out the form !'
 
+        cursor.execute("SELECT * FROM trip_types order by trip_type_id asc")
+        tripTypesList = cursor.fetchall()
+
+        cursor.execute("SELECT * FROM provinces order by id asc")
+        provincesList = cursor.fetchall()
+
+        cursor.execute("SELECT * FROM amphures order by id asc")
+        amphuresList = cursor.fetchall()
+
+        cursor.execute("SELECT * FROM districts order by id asc")
+        districtsList = cursor.fetchall() 
+
+        return render_template("person_edit.html", msg = msg, editPerson = editPerson, tripTypesList = tripTypesList, provincesList = provincesList, amphuresList = amphuresList, districtsList = districtsList)
+        
     return redirect(url_for('login'))
+
 
 @app.route('/person_add', methods =['GET', 'POST'])
 def person_add():
-    msg = ''
-
-    # identify varchar(50),
-    # ID_card_photo_path VARCHAR(500) NULL,
-    # firstname_th VARCHAR(100),
-    # lastname_th VARCHAR(100) NULL,
-    # telephone_number VARCHAR(20) NULL,
-    
-    # trip_type_id INT,
+    msg = ''    
 
     if request.method == 'POST' and 'identify' in request.form and 'ID_card_photo_path' in request.form and 'firstname_th' in request.form and 'lastname_th' in request.form and 'telephone_number' in request.form and 'trip_type' in request.form :
         identify = request.form['identify']
@@ -202,8 +213,28 @@ def person_add():
     elif request.method == 'POST':
         msg = 'Please fill out the form !'
     else:
-        return render_template('person_add.html', msg = msg)
-    return render_template('person.html', msg = msg)
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+
+        cursor.execute("SELECT * FROM trip_types order by trip_type_id asc")
+        tripTypesList = cursor.fetchall()
+
+        cursor.execute("SELECT * FROM provinces order by id asc")
+        provincesList = cursor.fetchall()
+
+        cursor.execute("SELECT * FROM amphures order by id asc")
+        amphuresList = cursor.fetchall()
+
+        cursor.execute("SELECT * FROM districts order by id asc")
+        districtsList = cursor.fetchall() 
+
+        return render_template('person_add.html', msg = msg, tripTypesList = tripTypesList, provincesList = provincesList, amphuresList = amphuresList, districtsList = districtsList)
+
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute('SELECT persons.*, trip_types.trip_type_name as trip_type_name FROM persons INNER JOIN trip_types ON trip_types.trip_type_id = persons.trip_type_id')
+    persons = cursor.fetchall()
+
+    return render_template('person.html', msg = msg, persons = persons)
+
 
 @app.route("/person_delete")
 def person_delete():
@@ -212,6 +243,25 @@ def person_delete():
     return redirect(url_for('login'))
 
 
+# (C)
+@app.route("/person_search", methods=["GET", "POST"])
+def person_search():
+  # (C1) SEARCH FOR PERSONS
+  if request.method == "POST":
+    data = dict(request.form)
+    persons = getperson(data["search1"],data["search2"])
+  else:
+    persons = []
+ 
+  # (C2) RENDER HTML PAGE
+  return render_template("person.html", persons=persons)
+
+# (B) HELPER FUNCTION - SEARCH PERSONS
+def getperson(search1,search2):
+  cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+  cursor.execute('SELECT persons.*, trip_types.trip_type_name as trip_type_name FROM persons INNER JOIN trip_types ON trip_types.trip_type_id = persons.trip_type_id WHERE firstname_th LIKE %s AND lastname_th LIKE %s', ('%'+search1+'%', '%'+search2+'%'))
+  results = cursor.fetchall()  
+  return results
 
 
 if __name__ == "__main__":
