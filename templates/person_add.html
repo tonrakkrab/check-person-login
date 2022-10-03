@@ -4,8 +4,8 @@
     {% block content %}
 
     <div class="container" style="align-items: center;">
-        <div class="msg">{{ msg }}</div>
-        <!-- <br/>
+        <!-- <div class="msg">{{ msg }}</div>
+        <br/>
         {% if session.username %}
         <h3>Welcome {{ session.username }}!</h3>
         {% else %}
@@ -19,20 +19,11 @@
             {% if msg is defined and msg %}
                 <div class="alert alert-warning">{{ msg }}</div>
             {% endif %}
-
-            <!-- 
-            identify varchar(50),
-            ID_card_photo_path VARCHAR(500) NULL,
-            firstname_th VARCHAR(100),
-            lastname_th VARCHAR(100) NULL,
-            telephone_number VARCHAR(20) NULL,
-            
-            trip_type_id INT,
-            -->            
-            
-            <div id="divIdentifyOrPassport" class="form-group">
+                
+                
+            <div id="divIdentifyOrPassport" class="span6" style="margin-left:0px;">
                 <label for="identify">Identify / Passport :</label>                    
-                <input type="text" class="form-control" id="identify" name="identify" pattern="^([0-9]){13}$|^([A-Z a-z]){2}([0-9]){7}$" maxlength="13" placeholder="Enter identify">
+                <input type="text" class="form-control" id="identify" name="identify" required pattern="^([0-9]){13}$|^([A-Z a-z]){2}([0-9]){7}$" maxlength="13" placeholder="Enter identify">
                 <input type="button"class="form-control" value="ตรวจ Identify / Passport" onclick="return CheckIdentifyPassport();" style="margin-bottom: 10px;"/>
                 <script type="text/javascript">
                     function CheckIdentifyPassport() {
@@ -49,24 +40,28 @@
                     }
                 </script>
             </div>
-            <div class="form-group">
+            <div class="span5" style="margin-left:0px;">
                 <label for="ID_card_photo_path">ถ่ายภาพบัตรประชานชน:</label>
                 <input type="text" class="form-control" id="ID_card_photo_path" name="ID_card_photo_path" placeholder="Enter ID Card photo path">
             </div>
-            <div class="form-group">
+            <div class="span3" style="margin-left:0px;">
                 <label for="firstname_th">ชื่อ:</label>
-                <input type="text" class="form-control" id="firstname_th" name="firstname_th" placeholder="Enter firstname">
+                <input type="text" class="form-control" id="firstname_th" name="firstname_th" required placeholder="Enter firstname">
             </div>
-            <div class="form-group">
+            <div class="span3" style="margin-left:0px;">
                 <label for="lastname_th">สกุล:</label>
                 <input type="text" class="form-control" id="lastname_th" name="lastname_th" placeholder="Enter lastname">
             </div>            
-            <div class="form-group">
+            <div class="span3">
                 <label for="telephone_number">เบอร์โทรศัพท์:</label>
-                <input type="tel" class="form-control" id="telephone_number" name="telephone_number" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="Enter telephone number">
-            </div>
-            
-            <div class="form-group">
+                <!-- <input type="tel" class="form-control" id="telephone_number" name="telephone_number" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="Enter telephone number">
+                -->
+                <input type="tel" class="form-control" id="telephone_number" name="telephone_number" required pattern="[0-9]{10}" placeholder="Enter telephone number">
+                <br/>
+                <br/>
+            </div>                
+                
+            <div class="span3" style="margin-left:0px;">
                 <label for="trip_type">รูปแบบการเดินทาง:</label>
                 <!-- <select class="form-control" id="trip_type" name="trip_type">
                     <option value="1">รถไฟ</option>
@@ -74,116 +69,180 @@
                     <option value="3">รถยนต์ส่วนบุคคล</option>
                     <option value="4">ทางเรือ</option>
                 </select> -->
-                <select name="trip_type">
+                <select name="trip_type" required>
+                    <option value='0'>(กรุณาเลือก)</option>
                     {% for c in tripTypesList %}
                         <option value='{{c.trip_type_id}}'>{{c.trip_type_name}}</option>
                     {% endfor %}
                 </select>
+                <br/>
+                <br/>
             </div>
-            
-            <div class="form-group">
-                <label for="origin_date">วันที่เดินทาง จากต้นทาง:</label>
-                <input type="date" class="form-control" id="origin_date" name="origin_date" placeholder="Enter origin date">
+        
+            <div class="span3" style="margin-left:0px;">
+                <div class="form-group">
+                    <label for="origin_date">วันที่เดินทาง จากต้นทาง:</label>
+                    <input type="date" class="form-control" id="origin_date" name="origin_date" required placeholder="Enter origin date">
+                </div>
+            </div>
+            <div class="span3" style="margin-left:0px;">
+                <div class="form-group">
+                    <label for="origin_country">ประเทศต้นทาง:</label>
+                    <select name="origin_country" id="origin_country" data-live-search="true" required>
+                        <option value='0'>(กรุณาเลือก)</option>
+                        {% for c in countriesList %}
+                            <option value='{{c.id}}' {% if c.id == 1211 %}selected="selected"{% endif %}>{{c.name_th}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group" style="margin-left:0px;">
+                    <label for="origin_province">จังหวัดต้นทาง:</label>
+                    <select name="origin_province" id="origin_province" data-live-search="true">
+                        <option value='0'>(กรุณาเลือก)</option>
+                        {% for c in provincesList %}
+                            <option value='{{c.id}}'>{{c.name_th}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group" style="margin-left:0px;">
+                    <label for="origin_amphur">อำเภอต้นทาง:</label>
+                    <select name="origin_amphur" id="origin_amphur" data-live-search="true">
+                        <option value='0'>(กรุณาเลือก)</option>
+                        {% for c in amphuresList %}
+                            <option value='{{c.id}}'>{{c.name_th}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group" style="margin-left:0px;">
+                    <label for="origin_tambon">ตำบลต้นทาง:</label>
+                    <select name="origin_tambon" id="origin_tambon" data-live-search="true">
+                        <option value='0'>(กรุณาเลือก)</option>
+                        {% for c in districtsList %}
+                            <option value='{{c.id}}'>{{c.name_th}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <br/>
+                <br/>
+            </div>
+                                    
+            <div class="span3">
+                <div class="form-group">
+                    <label for="destination_date">วันที่เดินทาง ถึงปลายทาง:</label>
+                    <input type="date" class="form-control" id="destination_date" name="destination_date" placeholder="Enter destination date">
+                </div>
+            </div>
+            <div class="span3" style="margin-left:0px;">
+                <div class="form-group">
+                    <label for="destination_country">ประเทศปลายทาง:</label>
+                    <select name="destination_country" id="destination_country" data-live-search="true" required>
+                        <option value='0'>(กรุณาเลือก)</option>
+                        {% for c in countriesList %}
+                            <option value='{{c.id}}' {% if c.id == 1211 %}selected="selected"{% endif %}>{{c.name_th}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="destination_province">จังหวัดปลายทาง:</label>
+                    <select name="destination_province" id="destination_province" data-live-search="true">
+                        <option value='0'>(กรุณาเลือก)</option>
+                        {% for c in provincesList %}
+                            <option value='{{c.id}}'>{{c.name_th}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="destination_amphur">อำเภอปลายทาง:</label>
+                    <select name="destination_amphur" id="destination_amphur" data-live-search="true">
+                        <option value='0'>(กรุณาเลือก)</option>
+                        {% for c in amphuresList %}
+                            <option value='{{c.id}}'>{{c.name_th}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="destination_tambon">ตำบลปลายทาง:</label>
+                    <select name="destination_tambon" id="destination_tambon" data-live-search="true">
+                        <option value='0'>(กรุณาเลือก)</option>
+                        {% for c in districtsList %}
+                            <option value='{{c.id}}'>{{c.name_th}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label for="origin_country">ประเทศต้นทาง:</label>
-                <select name="origin_country">
-                    <!-- {% for c in countriesList %}
-                        <option value='{{c.country_id}}'>{{c.country_name}}</option>
-                    {% endfor %} -->
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="origin_province">จังหวัดต้นทาง:</label>
-                <select name="origin_province">
-                    {% for c in provincesList %}
-                        <option value='{{c.id}}'>{{c.name_th}}</option>
-                    {% endfor %}
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="origin_amphur">อำเภอต้นทาง:</label>
-                <select name="origin_amphur">
-                    {% for c in amphuresList %}
-                        <option value='{{c.id}}'>{{c.name_th}}</option>
-                    {% endfor %}
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="origin_tambon">ตำบลต้นทาง:</label>
-                <select name="origin_tambon">
-                    {% for c in districtsList %}
-                        <option value='{{c.id}}'>{{c.name_th}}</option>
-                    {% endfor %}
-                </select>
-            </div>
-
-            <!--
-            origin_tambon_id INT NULL,
-            origin_amphur_id INT NULL,
-            origin_province_id INT NULL,
-            origin_country_id INT NULL,
-            origin_date datetime NULL,
-            
-            destination_tambon_id INT NULL,
-            destination_amphur_id INT NULL,
-            destination_province_id INT NULL,
-            destination_country_id INT NULL,
-            destination_date datetime NULL, 
-            -->
-
-            <div class="form-group">
-                <label for="destination_country">ประเทศปลายทาง:</label>
-                <select name="destination_country">
-                    <!-- {% for c in countriesList %}
-                        <option value='{{c._country_id}}'>{{c.country_name}}</option>
-                    {% endfor %} -->
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="destination_province">จังหวัดปลายทาง:</label>
-                <select name="destination_province">
-                    {% for c in provincesList %}
-                        <option value='{{c.id}}'>{{c.name_th}}</option>
-                    {% endfor %}
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="destination_amphur">อำเภอปลายทาง:</label>
-                <select name="destination_amphur">
-                    {% for c in amphuresList %}
-                        <option value='{{c.id}}'>{{c.name_th}}</option>
-                    {% endfor %}
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="destination_tambon">ตำบลปลายทาง:</label>
-                <select name="destination_tambon">
-                    {% for c in districtsList %}
-                        <option value='{{c.id}}'>{{c.name_th}}</option>
-                    {% endfor %}
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="destination_date">วันที่เดินทาง ถึงปลายทาง:</label>
-                <input type="date" class="form-control" id="destination_date" name="destination_date" placeholder="Enter destination date">
-            </div>
-
-            <br/>
-            <button type="submit" class="btn btn-primary">บันทึกข้อมูล (Save Data)</button>            
+            <div class="span12" style="margin-left:0px;">                
+                <button type="submit" class="btn btn-primary">บันทึกข้อมูล (Save Data)</button>
+            </div>         
         </form>
 
-        <br/>
-        <br/>
-        <a href="{{url_for('person')}}" class="btn btn-danger">ยกเลิก (Cancel)</a>
+        <div class="span12" style="margin-left:0px;">
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <a href="{{url_for('person')}}" class="btn btn-danger">ยกเลิก (Cancel)</a>
+        </div>
     </div>
 
     {% endblock content %}
+
+    {% block extrajs %}
+                <script type="text/javascript">
+                    $(document).ready(function() {
+              
+                    //   $('#all_classes').change(function(){
+              
+                    //     $.getJSON('/_update_dropdown', {
+                    //       selected_class: $('#all_classes').val()
+              
+                    //     }).success(function(data) {
+                    //           $('#all_entries').html(data.html_string_selected);
+                    //      })
+                    //   });
+                    //   $('#process_input').bind('click', function() {
+              
+                    //       $.getJSON('/_process_data', {
+                    //           selected_class: $('#all_classes').val(),
+                    //           selected_entry: $('#all_entries').val(),
+              
+              
+                    //       }).success(function(data) {
+                    //           $('#processed_results').text(data.random_text);
+                    //       })
+                    //     return false;
+              
+                    //   });
+
+                    // $('#destination_country').change(function(){
+              
+                    //     $.getJSON('/_update_dropdown', {
+                    //         selected_class: $('#destination_country').val()
+                
+                    //         }).success(function(data) {
+                    //                 $('#destination_country').html(data.html_string_selected);
+                    //         })
+                    //     });
+                    //     $('#process_input').bind('click', function() {
+                
+                    //         $.getJSON('/_process_data', {
+                    //             selected_class: $('#destination_country').val(),
+                    //             selected_entry: $('#destination_province').val(),
+
+                    //         }).success(function(data) {
+                    //             $('#processed_results').text(data.random_text);
+                    //         })
+
+                    //     return false;
+                
+                    //     });
+                    // });
+                  </script>
+{% endblock extrajs %}
+
